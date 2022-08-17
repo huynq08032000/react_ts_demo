@@ -1,0 +1,20 @@
+.header-container {
+    display: flex;
+    align-items: center;
+    height: 44px;
+    width: 100%;
+    justify-content: space-around;
+    background-color: #282A35;
+
+    a {
+        height: 100%;
+        padding: 10px;
+        color: #fff;
+        text-transform: uppercase;
+        text-decoration: none;
+        font-weight: 500;
+        &:hover {
+            background-color: #000000;
+        }
+    }
+}
