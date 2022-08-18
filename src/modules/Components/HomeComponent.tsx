@@ -8,30 +8,47 @@ import { Button, CardActionArea, FormControl, InputLabel, OutlinedInput } from '
 
 const HomeComponent = () => {
     const _ = require('lodash')
-    const [datasFromApi, setDatasFromApi] = React.useState<Img[]>();
-    const [datas, setDatas] = React.useState<Img[]>();
-    const [datasClone, setDatasClone] = React.useState<Img[]>();
-    const loadData = async () => {
-        const res = await fetch('https://jsonplaceholder.typicode.com/photos')
-        const datas = await res.json()
-        setDatasFromApi(datas)
-    }
+    const axios = require('axios');
+    const [datasFromApi, setDatasFromApi] = React.useState<Img[]>([]);
+    const [datas, setDatas] = React.useState<Img[]>([]);
+    const [datasClone, setDatasClone] = React.useState<Img[]>([]);
     React.useEffect(() => {
-        loadData();
-        setDatas(datasFromApi?.slice(0, 10))
-        const datasClone = _.cloneDeep(datas)
-        setDatasClone(datasClone)
-    }, [datasFromApi])
+        axios('https://jsonplaceholder.typicode.com/photos')
+            .then((res: any) => {
+                if (res.status == 200) {
+                    setDatasFromApi(res.data)
+                    setDatas(res.data.slice(0, 10))
+                    setDatasClone(res.data.slice(0, 10))
+                }
+            })
+            .catch((err: any) => {
+                console.log(err)
+            })
+    },[])
 
-    const handleChange = (id : number, value : string) =>{
+    const handleChange = (id: number, value: string) => {
+        const newDataClone = _.cloneDeep(datasClone)
+        if (newDataClone) {
+            const index = newDataClone.findIndex((el : any) => el.id === id)
+            newDataClone[index].title = value
+            setDatasClone([...newDataClone])
+        }
+    }
+    const handleSave = () => {
+        const dataSave = _.cloneDeep(datasClone)
+        setDatas(dataSave)
+    }
+    const handleClear = () => {
+        const dataClear = _.cloneDeep(datas)
+        setDatasClone(dataClear)
     }
     return (
         <>
-            <div className='btn-container' style={{display : 'flex', justifyContent : 'center'}}>
-                <Button variant="contained" color="success" sx={{margin : '10px'}}>
+            <div className='btn-container' style={{ display: 'flex', justifyContent: 'center' }}>
+                <Button variant="contained" color="success" sx={{ margin: '10px' }} onClick={handleSave}>
                     Save
                 </Button>
-                <Button variant="outlined" sx={{margin : '10px'}}>
+                <Button variant="outlined" sx={{ margin: '10px' }} onClick={handleClear}>
                     Clear
                 </Button>
             </div>
@@ -57,7 +74,7 @@ const HomeComponent = () => {
                                             multiline
                                             maxRows={5}
                                             value={data.title}
-                                            onChange={(e)=>{
+                                            onChange={(e) => {
                                                 handleChange(data.id, e.target.value)
                                             }}
                                         />
