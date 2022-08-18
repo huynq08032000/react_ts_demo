@@ -44,7 +44,7 @@ const HomeComponent = () => {
     }
     return (
         <>
-            <div className='btn-container' style={{ display: 'flex', justifyContent: 'center' }}>
+            <div className='btn-container' style={{ display: 'flex', justifyContent: 'center'}}>
                 <Button variant="contained" color="success" sx={{ margin: '10px' }} onClick={handleSave}>
                     Save
                 </Button>
